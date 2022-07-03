@@ -7,6 +7,7 @@ import {
   ReadPostDetailInput,
   ReadPostDetailOutput,
 } from './dtos/readPostDetail.dto';
+import { LikeToggleInput, LikeToggleOutput } from './dtos/likeToggle.dto';
 
 @Injectable()
 export class PostsService {
@@ -111,6 +112,56 @@ export class PostsService {
       if (!post) throw new Error('❌ Not Found Post by this postId');
       if (post.userId !== userId) throw new Error('❌ No Authorization');
       await this.prismaService.post.delete({ where: { id: post.id } });
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async likeToggle(
+    { postId }: LikeToggleInput,
+    userId: number,
+  ): Promise<LikeToggleOutput> {
+    try {
+      const post = await this.prismaService.post.findUnique({
+        where: {
+          id: postId,
+        },
+        select: {
+          id: true,
+        },
+      });
+      if (!post) throw new Error('❌ Not Found Post by this post id.');
+      const like = await this.prismaService.like.findUnique({
+        where: {
+          userId_postId: {
+            userId,
+            postId: post.id,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      if (like) {
+        await this.prismaService.like.delete({
+          where: {
+            id: like.id,
+          },
+        });
+      } else {
+        await this.prismaService.like.create({
+          data: {
+            userId,
+            postId: post.id,
+          },
+        });
+      }
       return {
         ok: true,
       };

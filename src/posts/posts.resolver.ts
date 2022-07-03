@@ -10,6 +10,8 @@ import {
   ReadPostDetailInput,
   ReadPostDetailOutput,
 } from './dtos/readPostDetail.dto';
+import { LikeEntity } from './entities/like.entity';
+import { LikeToggleInput, LikeToggleOutput } from './dtos/likeToggle.dto';
 
 @Resolver(() => PostEntity)
 export class PostsResolver {
@@ -45,5 +47,19 @@ export class PostsResolver {
     @CurrentUser() currentUser: UserEntity,
   ): Promise<DeletePostOutput> {
     return this.postService.deletePost(deletePostInput, currentUser.id);
+  }
+}
+
+@Resolver(() => LikeEntity)
+export class LikesResolver {
+  constructor(private postService: PostsService) {}
+
+  @Roles('USER')
+  @Mutation(() => LikeToggleOutput)
+  async likeToggle(
+    @Args('input') likeToggleInput: LikeToggleInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<LikeToggleOutput> {
+    return this.postService.likeToggle(likeToggleInput, currentUser.id);
   }
 }
