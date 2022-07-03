@@ -6,6 +6,10 @@ import { DeletePostInput, DeletePostOutput } from './dtos/deletePost.dto';
 import { ReadPostsInput, ReadPostsOutput } from './dtos/readPosts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PostsService } from './posts.service';
+import {
+  ReadPostDetailInput,
+  ReadPostDetailOutput,
+} from './dtos/readPostDetail.dto';
 
 @Resolver(() => PostEntity)
 export class PostsResolver {
@@ -16,6 +20,13 @@ export class PostsResolver {
     @Args('input') readPostsInput: ReadPostsInput,
   ): Promise<ReadPostsOutput> {
     return this.postService.readPosts(readPostsInput);
+  }
+
+  @Query(() => ReadPostDetailOutput)
+  async readPostDetail(
+    @Args('input') readPostDetailInput: ReadPostDetailInput,
+  ): Promise<ReadPostDetailOutput> {
+    return this.postService.readPostDetail(readPostDetailInput);
   }
 
   @Roles('USER')

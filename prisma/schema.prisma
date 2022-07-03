@@ -21,10 +21,10 @@ model User {
   password  String
   avatar    String?
   role      Role       @default(USER)
-  Post      Post[]
-  Bookmark  Bookmark[]
-  Comment   Comment[]
-  Like      Like[]
+  posts     Post[]
+  bookmarks Bookmark[]
+  comments  Comment[]
+  likes     Like[]
 }
 
 enum Role {
@@ -44,8 +44,8 @@ model Post {
   posterPath String
   mediaTitle String
   vote       Float
-  Comment    Comment[]
-  Like       Like[]
+  comments   Comment[]
+  likes      Like[]
 
   @@index([userId])
 }

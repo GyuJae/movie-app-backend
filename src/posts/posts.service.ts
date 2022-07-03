@@ -3,6 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { CreatePostInput, CreatePostOutput } from './dtos/createPost.dto';
 import { ReadPostsInput, ReadPostsOutput } from './dtos/readPosts.dto';
 import { DeletePostInput, DeletePostOutput } from './dtos/deletePost.dto';
+import {
+  ReadPostDetailInput,
+  ReadPostDetailOutput,
+} from './dtos/readPostDetail.dto';
 
 @Injectable()
 export class PostsService {
@@ -20,8 +24,8 @@ export class PostsService {
           user: true,
           _count: {
             select: {
-              Like: true,
-              Comment: true,
+              likes: true,
+              comments: true,
             },
           },
         },
@@ -35,6 +39,33 @@ export class PostsService {
         posts,
         totalCount,
         totalPage: Math.ceil(totalCount / take),
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async readPostDetail({
+    postId,
+  }: ReadPostDetailInput): Promise<ReadPostDetailOutput> {
+    try {
+      const post = await this.prismaService.post.findUnique({
+        where: {
+          id: postId,
+        },
+        include: {
+          comments: true,
+          user: true,
+          _count: true,
+        },
+      });
+      if (!post) throw new Error('❌ Not Found Post by this post id');
+      return {
+        ok: true,
+        post,
       };
     } catch (error) {
       return {

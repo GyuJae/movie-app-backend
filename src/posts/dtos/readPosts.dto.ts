@@ -7,12 +7,12 @@ import { UserEntity } from 'src/users/entities/user.entity';
 export class ReadPostsInput extends PaginationInput {}
 
 @ObjectType()
-class CountForPost {
+export class CountForPost {
   @Field(() => Int)
-  Like: number;
+  likes: number;
 
   @Field(() => Int)
-  Comment: number;
+  comments: number;
 }
 
 @ObjectType()
