@@ -10,8 +10,9 @@ import {
   DeleteCommentInput,
   DeleteCommentOutput,
 } from './dtos/deleteComment.dto';
+import { CommentEntity } from './entities/comment.entity';
 
-@Resolver()
+@Resolver(() => CommentEntity)
 export class CommentsResolver {
   constructor(private commentService: CommentsService) {}
 
