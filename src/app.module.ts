@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { BookmarksModule } from './bookmarks/bookmarks.module';
     CommentsModule,
     BookmarksModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
