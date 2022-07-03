@@ -12,9 +12,15 @@ export class ReadPostDetailInput {
 }
 
 @ObjectType()
+class CommentWithUser extends CommentEntity {
+  @Field(() => UserEntity)
+  user: UserEntity;
+}
+
+@ObjectType()
 class PostDetailEntity extends PostEntity {
-  @Field(() => [CommentEntity])
-  comments: CommentEntity[];
+  @Field(() => [CommentWithUser])
+  comments: CommentWithUser[];
 
   @Field(() => UserEntity)
   user: UserEntity;

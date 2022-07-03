@@ -58,7 +58,11 @@ export class PostsService {
           id: postId,
         },
         include: {
-          comments: true,
+          comments: {
+            include: {
+              user: true,
+            },
+          },
           user: true,
           _count: true,
         },
