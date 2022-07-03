@@ -6,6 +6,10 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/createComment.dto';
+import {
+  DeleteCommentInput,
+  DeleteCommentOutput,
+} from './dtos/deleteComment.dto';
 
 @Resolver()
 export class CommentsResolver {
@@ -19,6 +23,18 @@ export class CommentsResolver {
   ): Promise<CreateCommentOutput> {
     return this.commentService.createComment(
       createCommentInput,
+      currentUser.id,
+    );
+  }
+
+  @Roles('USER')
+  @Mutation(() => DeleteCommentOutput)
+  async deleteCommet(
+    @Args('input') deleteCommentInput: DeleteCommentInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<DeleteCommentOutput> {
+    return this.commentService.deleteComment(
+      deleteCommentInput,
       currentUser.id,
     );
   }
