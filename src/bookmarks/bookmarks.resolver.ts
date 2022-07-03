@@ -7,6 +7,10 @@ import {
   CreateBookmarkInput,
   CreateBookmarkOutput,
 } from './dtos/createBookmark.dto';
+import {
+  DeleteBookmarkInput,
+  DeleteBookmarkOutput,
+} from './dtos/deleteBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 import { BookmarkEntity } from './entities/bookmark.entity';
 
@@ -30,6 +34,18 @@ export class BookmarksResolver {
   ): Promise<CreateCommentOutput> {
     return this.bookmarkService.createBookmark(
       createBookmarkInput,
+      currentUser.id,
+    );
+  }
+
+  @Roles('USER')
+  @Mutation(() => DeleteBookmarkOutput)
+  async deleteBookmark(
+    @Args('input') deleteBookmarkInput: DeleteBookmarkInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<DeleteBookmarkOutput> {
+    return this.bookmarkService.deleteBookmark(
+      deleteBookmarkInput,
       currentUser.id,
     );
   }

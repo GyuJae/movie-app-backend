@@ -4,6 +4,10 @@ import {
   CreateBookmarkInput,
   CreateBookmarkOutput,
 } from './dtos/createBookmark.dto';
+import {
+  DeleteBookmarkInput,
+  DeleteBookmarkOutput,
+} from './dtos/deleteBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 
 @Injectable()
@@ -43,6 +47,39 @@ export class BookmarksService {
       return {
         ok: true,
         bookmarks,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async deleteBookmark(
+    { bookmarkId }: DeleteBookmarkInput,
+    userId: number,
+  ): Promise<DeleteBookmarkOutput> {
+    try {
+      const bookmark = await this.prismaService.bookmark.findUnique({
+        where: {
+          id: bookmarkId,
+        },
+        select: {
+          id: true,
+          userId: true,
+        },
+      });
+      if (!bookmark)
+        throw new Error('❌ Not Found Bookmark by this bookmark id');
+      if (bookmark.userId !== userId) throw new Error('❌ No Authorization');
+      await this.prismaService.bookmark.delete({
+        where: {
+          id: bookmark.id,
+        },
+      });
+      return {
+        ok: true,
       };
     } catch (error) {
       return {
