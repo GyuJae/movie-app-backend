@@ -11,6 +11,7 @@ import {
   DeleteBookmarkInput,
   DeleteBookmarkOutput,
 } from './dtos/deleteBookmark.dto';
+import { LastBookmarkOutput } from './dtos/lastBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 import { BookmarkEntity } from './entities/bookmark.entity';
 
@@ -24,6 +25,14 @@ export class BookmarksResolver {
     @CurrentUser() currentUser: UserEntity,
   ): Promise<ReadBookmarksOutput> {
     return this.bookmarkService.readBookmarks(currentUser.id);
+  }
+
+  @Roles('USER')
+  @Query(() => LastBookmarkOutput)
+  async lastBookmark(
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<LastBookmarkOutput> {
+    return this.bookmarkService.lastBookmark(currentUser.id);
   }
 
   @Roles('USER')

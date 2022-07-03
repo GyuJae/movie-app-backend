@@ -8,6 +8,7 @@ import {
   DeleteBookmarkInput,
   DeleteBookmarkOutput,
 } from './dtos/deleteBookmark.dto';
+import { LastBookmarkOutput } from './dtos/lastBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 
 @Injectable()
@@ -80,6 +81,28 @@ export class BookmarksService {
       });
       return {
         ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async lastBookmark(userId: number): Promise<LastBookmarkOutput> {
+    try {
+      const bookmark = await this.prismaService.bookmark.findFirst({
+        where: {
+          userId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return {
+        ok: true,
+        bookmark,
       };
     } catch (error) {
       return {
