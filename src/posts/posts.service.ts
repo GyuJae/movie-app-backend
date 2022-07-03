@@ -16,12 +16,7 @@ export class PostsService {
         skip,
         take,
         include: {
-          user: {
-            select: {
-              avatar: true,
-              username: true,
-            },
-          },
+          user: true,
           _count: {
             select: {
               Like: true,
