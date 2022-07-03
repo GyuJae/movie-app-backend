@@ -8,14 +8,18 @@ import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { EditProfileInput, EditProfileOutput } from './dtos/editProfile.dto';
 import { CurrentUser, Roles } from 'src/auth/auth.decorator';
+import { MeOutput } from './dtos/me.dto';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
   constructor(private userService: UsersService) {}
 
-  @Query(() => Boolean)
-  hello() {
-    return true;
+  @Roles('Any')
+  @Query(() => MeOutput)
+  me(@CurrentUser() user: UserEntity): MeOutput {
+    return {
+      user,
+    };
   }
 
   @Mutation(() => CreateAccountOutput, { description: 'Create Account' })

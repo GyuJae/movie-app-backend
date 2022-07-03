@@ -13,18 +13,23 @@ datasource db {
 }
 
 model User {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  email      String       @unique
-  username   String       @unique
-  password   String
-  avatar     String?
-  Post       Post[]
-  Bookmark   Bookmark[]
-  RecentView RecentView[]
-  Comment    Comment[]
-  Like       Like[]
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  email     String     @unique
+  username  String     @unique
+  password  String
+  avatar    String?
+  role      Role       @default(USER)
+  Post      Post[]
+  Bookmark  Bookmark[]
+  Comment   Comment[]
+  Like      Like[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Post {
@@ -74,23 +79,6 @@ model Comment {
 }
 
 model Bookmark {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  mediaType   Media
-  mediaId     Int
-  posterPath  String
-  title       String
-  releaseDate String
-  vote        Float
-
-  @@unique([userId, mediaId])
-  @@index([userId])
-}
-
-model RecentView {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
