@@ -4,6 +4,7 @@ import {
   CreateBookmarkInput,
   CreateBookmarkOutput,
 } from './dtos/createBookmark.dto';
+import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 
 @Injectable()
 export class BookmarksService {
@@ -22,6 +23,26 @@ export class BookmarksService {
       });
       return {
         ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async readBookmarks(userId: number): Promise<ReadBookmarksOutput> {
+    try {
+      const bookmarks = await this.prismaService.bookmark.findMany({
+        where: {
+          userId,
+        },
+      });
+
+      return {
+        ok: true,
+        bookmarks,
       };
     } catch (error) {
       return {
