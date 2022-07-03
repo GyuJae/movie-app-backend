@@ -1,6 +1,8 @@
+import { UserEntity } from 'src/users/entities/user.entity';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser, Roles } from 'src/auth/auth.decorator';
 import { CreatePostInput, CreatePostOutput } from './dtos/createPost.dto';
+import { DeletePostInput, DeletePostOutput } from './dtos/deletePost.dto';
 import { ReadPostsInput, ReadPostsOutput } from './dtos/readPosts.dto';
 import { PostEntity } from './entities/post.entity';
 import { PostsService } from './posts.service';
@@ -20,8 +22,17 @@ export class PostsResolver {
   @Mutation(() => CreatePostOutput)
   async createPost(
     @Args('input') createPostInput: CreatePostInput,
-    @CurrentUser() currentUser,
+    @CurrentUser() currentUser: UserEntity,
   ): Promise<CreatePostOutput> {
     return this.postService.createPost(createPostInput, currentUser.id);
+  }
+
+  @Roles('USER')
+  @Mutation(() => DeletePostOutput)
+  async deletePost(
+    @Args('input') deletePostInput: DeletePostInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<DeletePostOutput> {
+    return this.postService.deletePost(deletePostInput, currentUser.id);
   }
 }

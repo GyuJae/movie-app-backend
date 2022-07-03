@@ -2,6 +2,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreatePostInput, CreatePostOutput } from './dtos/createPost.dto';
 import { ReadPostsInput, ReadPostsOutput } from './dtos/readPosts.dto';
+import { DeletePostInput, DeletePostOutput } from './dtos/deletePost.dto';
 
 @Injectable()
 export class PostsService {
@@ -51,6 +52,34 @@ export class PostsService {
       await this.prismaService.post.create({
         data: { ...createPostInput, userId },
       });
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
+
+  async deletePost(
+    { postId }: DeletePostInput,
+    userId: number,
+  ): Promise<DeletePostOutput> {
+    try {
+      const post = await this.prismaService.post.findUnique({
+        where: {
+          id: postId,
+        },
+        select: {
+          id: true,
+          userId: true,
+        },
+      });
+      if (!post) throw new Error('❌ Not Found Post by this postId');
+      if (post.userId !== userId) throw new Error('❌ No Authorization');
+      await this.prismaService.post.delete({ where: { id: post.id } });
       return {
         ok: true,
       };
