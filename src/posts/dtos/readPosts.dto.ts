@@ -15,7 +15,7 @@ export class CountForPost {
   comments: number;
 }
 
-@ObjectType()
+@ObjectType('PostWithCount')
 class PostWithCount extends PostEntity {
   @Field(() => UserEntity)
   user: UserEntity;
@@ -27,5 +27,5 @@ class PostWithCount extends PostEntity {
 @ObjectType()
 export class ReadPostsOutput extends PaginationOuput {
   @Field(() => [PostWithCount], { nullable: true })
-  posts?: PostWithCount[];
+  posts?: PostEntity[];
 }

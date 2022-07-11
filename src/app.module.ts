@@ -11,13 +11,14 @@ import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { AppController } from './app.controller';
+import { join } from 'path';
 
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       debug: process.env.NODE_ENV === 'development',
-      autoSchemaFile: true,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: false,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],

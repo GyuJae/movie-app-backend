@@ -1,5 +1,13 @@
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import {
   CraeteAccountInput,
   CreateAccountOutput,
@@ -13,6 +21,12 @@ import { MeOutput } from './dtos/me.dto';
 @Resolver(() => UserEntity)
 export class UsersResolver {
   constructor(private userService: UsersService) {}
+
+  @ResolveField(() => Int)
+  @Roles('Any')
+  count(@Parent() user: UserEntity): number {
+    return user.id;
+  }
 
   @Roles('Any')
   @Query(() => MeOutput)

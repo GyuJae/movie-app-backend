@@ -1,3 +1,4 @@
+import { FindPostByIdOutput } from './dtos/findPostById.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { CreatePostInput, CreatePostOutput } from './dtos/createPost.dto';
@@ -12,6 +13,26 @@ import { LikeToggleInput, LikeToggleOutput } from './dtos/likeToggle.dto';
 @Injectable()
 export class PostsService {
   constructor(private prismaService: PrismaService) {}
+
+  async findPostById(postId: number): Promise<FindPostByIdOutput> {
+    try {
+      const post = await this.prismaService.post.findUnique({
+        where: {
+          id: postId,
+        },
+      });
+      if (!post) throw new Error('❌ Not Found Post by this postId');
+      return {
+        ok: true,
+        post,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
 
   async readPosts({
     take = 25,
