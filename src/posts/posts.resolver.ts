@@ -12,10 +12,20 @@ import {
 } from './dtos/readPostDetail.dto';
 import { LikeEntity } from './entities/like.entity';
 import { LikeToggleInput, LikeToggleOutput } from './dtos/likeToggle.dto';
+import { IsLikePostInput, IsLikePostOutput } from './dtos/isLikePost.dto';
 
 @Resolver(() => PostEntity)
 export class PostsResolver {
   constructor(private postService: PostsService) {}
+
+  @Roles('USER')
+  @Query(() => IsLikePostOutput)
+  async isLikePost(
+    @Args('input') isLikePostInput: IsLikePostInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<IsLikePostOutput> {
+    return this.postService.isLikePost(isLikePostInput, currentUser.id);
+  }
 
   @Query(() => ReadPostsOutput)
   async readPosts(

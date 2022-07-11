@@ -121,6 +121,16 @@ type EditProfileOutput {
   ok: Boolean!
 }
 
+input IsLikePostInput {
+  postId: Int!
+}
+
+type IsLikePostOutput {
+  error: String
+  isLike: Boolean!
+  ok: Boolean!
+}
+
 type LastBookmarkOutput {
   bookmark: BookmarkEntity
   error: String
@@ -210,6 +220,7 @@ type PostWithCount {
 }
 
 type Query {
+  isLikePost(input: IsLikePostInput!): IsLikePostOutput!
   lastBookmark: LastBookmarkOutput!
   me: MeOutput!
   readBookmarks: ReadBookmarksOutput!

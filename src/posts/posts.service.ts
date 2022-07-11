@@ -1,3 +1,4 @@
+import { IsLikePostInput, IsLikePostOutput } from './dtos/isLikePost.dto';
 import { FindPostByIdOutput } from './dtos/findPostById.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
@@ -13,6 +14,32 @@ import { LikeToggleInput, LikeToggleOutput } from './dtos/likeToggle.dto';
 @Injectable()
 export class PostsService {
   constructor(private prismaService: PrismaService) {}
+
+  async isLikePost(
+    { postId }: IsLikePostInput,
+    userId: number,
+  ): Promise<IsLikePostOutput> {
+    try {
+      const like = await this.prismaService.like.findUnique({
+        where: {
+          userId_postId: {
+            postId,
+            userId,
+          },
+        },
+      });
+      return {
+        ok: true,
+        isLike: !!like,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+        isLike: false,
+      };
+    }
+  }
 
   async findPostById(postId: number): Promise<FindPostByIdOutput> {
     try {
