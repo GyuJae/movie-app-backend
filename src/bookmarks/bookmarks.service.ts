@@ -8,12 +8,41 @@ import {
   DeleteBookmarkInput,
   DeleteBookmarkOutput,
 } from './dtos/deleteBookmark.dto';
+import { IsMeBookmarkInput, IsMeBookmarkOutput } from './dtos/isMeBookmark.dto';
 import { LastBookmarkOutput } from './dtos/lastBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 
 @Injectable()
 export class BookmarksService {
   constructor(private prismaService: PrismaService) {}
+
+  async isMeBookmark(
+    { mediaId }: IsMeBookmarkInput,
+    userId: number,
+  ): Promise<IsMeBookmarkOutput> {
+    try {
+      const bookmarked = await this.prismaService.bookmark.findUnique({
+        where: {
+          userId_mediaId: {
+            userId,
+            mediaId,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      return {
+        ok: true,
+        isBookmarked: !!bookmarked,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message,
+      };
+    }
+  }
 
   async createBookmark(
     createBookmarkInput: CreateBookmarkInput,
@@ -58,22 +87,23 @@ export class BookmarksService {
   }
 
   async deleteBookmark(
-    { bookmarkId }: DeleteBookmarkInput,
+    { mediaId }: DeleteBookmarkInput,
     userId: number,
   ): Promise<DeleteBookmarkOutput> {
     try {
       const bookmark = await this.prismaService.bookmark.findUnique({
         where: {
-          id: bookmarkId,
+          userId_mediaId: {
+            userId,
+            mediaId,
+          },
         },
         select: {
           id: true,
-          userId: true,
         },
       });
       if (!bookmark)
         throw new Error('❌ Not Found Bookmark by this bookmark id');
-      if (bookmark.userId !== userId) throw new Error('❌ No Authorization');
       await this.prismaService.bookmark.delete({
         where: {
           id: bookmark.id,

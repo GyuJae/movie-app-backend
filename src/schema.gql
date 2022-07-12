@@ -131,6 +131,16 @@ type IsLikePostOutput {
   ok: Boolean!
 }
 
+input IsMeBookmarkInput {
+  mediaId: Int!
+}
+
+type IsMeBookmarkOutput {
+  error: String
+  isBookmarked: Boolean!
+  ok: Boolean!
+}
+
 type LastBookmarkOutput {
   bookmark: BookmarkEntity
   error: String
@@ -221,6 +231,7 @@ type PostWithCount {
 
 type Query {
   isLikePost(input: IsLikePostInput!): IsLikePostOutput!
+  isMeBookmark(input: IsMeBookmarkInput!): IsMeBookmarkOutput!
   lastBookmark: LastBookmarkOutput!
   me: MeOutput!
   readBookmarks: ReadBookmarksOutput!

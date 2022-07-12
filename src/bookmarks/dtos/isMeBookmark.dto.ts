@@ -2,10 +2,13 @@ import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
 import { CoreOutput } from 'src/core/dtos/coreOutput.dto';
 
 @InputType()
-export class DeleteBookmarkInput {
+export class IsMeBookmarkInput {
   @Field(() => Int)
   mediaId: number;
 }
 
 @ObjectType()
-export class DeleteBookmarkOutput extends CoreOutput {}
+export class IsMeBookmarkOutput extends CoreOutput {
+  @Field(() => Boolean, { defaultValue: false })
+  isBookmarked?: boolean;
+}

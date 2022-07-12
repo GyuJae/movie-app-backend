@@ -11,6 +11,7 @@ import {
   DeleteBookmarkInput,
   DeleteBookmarkOutput,
 } from './dtos/deleteBookmark.dto';
+import { IsMeBookmarkInput, IsMeBookmarkOutput } from './dtos/isMeBookmark.dto';
 import { LastBookmarkOutput } from './dtos/lastBookmark.dto';
 import { ReadBookmarksOutput } from './dtos/readBookmarks.dto';
 import { BookmarkEntity } from './entities/bookmark.entity';
@@ -18,6 +19,15 @@ import { BookmarkEntity } from './entities/bookmark.entity';
 @Resolver(() => BookmarkEntity)
 export class BookmarksResolver {
   constructor(private bookmarkService: BookmarksService) {}
+
+  @Roles('USER')
+  @Query(() => IsMeBookmarkOutput)
+  async isMeBookmark(
+    @Args('input') isMeBookmarkInput: IsMeBookmarkInput,
+    @CurrentUser() currentUser: UserEntity,
+  ): Promise<IsMeBookmarkOutput> {
+    return this.bookmarkService.isMeBookmark(isMeBookmarkInput, currentUser.id);
+  }
 
   @Roles('USER')
   @Query(() => ReadBookmarksOutput)
