@@ -12,9 +12,11 @@ import { CommentsModule } from './comments/comments.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
 import { AppController } from './app.controller';
 import { join } from 'path';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
+    HttpModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       debug: process.env.NODE_ENV === 'development',
@@ -22,6 +24,10 @@ import { join } from 'path';
       playground: false,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      cors: {
+        origin: 'http://localhost:3000',
+        credentials: true,
+      },
     }),
     UsersModule,
     PrismaModule,
