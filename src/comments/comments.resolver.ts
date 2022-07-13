@@ -50,7 +50,7 @@ export class CommentsResolver {
 
   @Roles('USER')
   @Mutation(() => DeleteCommentOutput)
-  async deleteCommet(
+  async deleteComment(
     @Args('input') deleteCommentInput: DeleteCommentInput,
     @CurrentUser() currentUser: UserEntity,
   ): Promise<DeleteCommentOutput> {
