@@ -8,10 +8,39 @@ import {
   DeleteCommentInput,
   DeleteCommentOutput,
 } from './dtos/deleteComment.dto';
+import {
+  IsMineCommentInput,
+  IsMineCommentOutput,
+} from './dtos/isMineComment.dto';
 
 @Injectable()
 export class CommentsService {
   constructor(private prismaService: PrismaService) {}
+
+  async isMineComment(
+    { commentId }: IsMineCommentInput,
+    userId: number,
+  ): Promise<IsMineCommentOutput> {
+    try {
+      const comment = await this.prismaService.comment.findFirst({
+        where: {
+          id: commentId,
+          userId,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      return {
+        isMine: !!comment,
+      };
+    } catch {
+      return {
+        isMine: false,
+      };
+    }
+  }
 
   async createComment(
     { postId, comment }: CreateCommentInput,

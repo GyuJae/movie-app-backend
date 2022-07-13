@@ -24,10 +24,6 @@ import { HttpModule } from '@nestjs/axios';
       playground: false,
       sortSchema: true,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      cors: {
-        origin: 'http://localhost:3000',
-        credentials: true,
-      },
     }),
     UsersModule,
     PrismaModule,

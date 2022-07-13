@@ -141,6 +141,14 @@ type IsMeBookmarkOutput {
   ok: Boolean!
 }
 
+input IsMineCommentInput {
+  commentId: Int!
+}
+
+type IsMineCommentOutput {
+  isMine: Boolean!
+}
+
 type LastBookmarkOutput {
   bookmark: BookmarkEntity
   error: String
@@ -232,6 +240,7 @@ type PostWithCount {
 type Query {
   isLikePost(input: IsLikePostInput!): IsLikePostOutput!
   isMeBookmark(input: IsMeBookmarkInput!): IsMeBookmarkOutput!
+  isMineComment(input: IsMineCommentInput!): IsMineCommentOutput!
   lastBookmark: LastBookmarkOutput!
   me: MeOutput!
   readBookmarks: ReadBookmarksOutput!
