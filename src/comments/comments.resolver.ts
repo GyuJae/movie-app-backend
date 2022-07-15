@@ -26,10 +26,6 @@ export class CommentsResolver {
     @Args('input') isMineCommentInput: IsMineCommentInput,
     @CurrentUser() currentUser: UserEntity,
   ): Promise<IsMineCommentOutput> {
-    if (!currentUser)
-      return {
-        isMine: false,
-      };
     return this.commentService.isMineComment(
       isMineCommentInput,
       currentUser.id,
